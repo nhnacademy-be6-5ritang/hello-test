@@ -50,7 +50,7 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script: |
           echo "Stopping existing application..."
-          pid=$(lsof -t -i:8080) && kill -9 $pid || echo "No application running on port 8080"
+          pid=$(lsof -t -i:${{ secrets.APP_PORT }}) && kill -9 $pid || echo "No application running on port ${{ secrets.APP_PORT }}"
 
 
     - name: execute shell script
@@ -63,5 +63,5 @@ jobs:
         script_stop: true
         script: |
           echo "Starting new application..."
-          nohup java -jar ~/target/hello.jar --server.port=8080 > app.log 2>&1 &
+          nohup java -jar ~/target/hello.jar --server.port=${{ secrets.APP_PORT }} > app.log 2>&1 &
           echo "New application started. Check app.log for details."
