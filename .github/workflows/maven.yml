@@ -53,6 +53,7 @@ jobs:
         target: "~/"
         rm: false
 
+
     # 앱 포트로 실행된 jar 파일 종료
     - name: Stop existing Spring Boot application
       uses: appleboy/ssh-action@master
