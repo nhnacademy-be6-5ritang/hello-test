@@ -42,7 +42,6 @@ jobs:
         rm: false
     - name: Wait and then kill Spring Boot Application
       run: |
-          sleep 10
           pkill -f 'java -jar ~/target/hello.jar'
 
     - name: execute shell script
