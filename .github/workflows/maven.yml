@@ -53,7 +53,7 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script: |
           echo "Stopping existing application..."
-          pkill -f 'java -jar ~/hello.jar' || true
+          pkill -f 'java -jar ~/hello.jar'
 
 
     - name: execute shell script
