@@ -30,6 +30,13 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
+    # 소나큐브 테스트 커버리지 측정
+    - name: Build and analyze with SonarQube
+      env:
+        SONAR_PROJECT_KEY: "5RITANG_TEST_COVERAGE"
+      run: mvn sonar:sonar -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }} -Dsonar.host.url=${{secrets.SONAR_HOST}} -Dsonar.login=${{secrets.SONAR_TOKEN}}
+
+    # jar 파일 배포
     - name: upload file
       uses: appleboy/scp-action@v0.1.7
       with:
@@ -41,6 +48,7 @@ jobs:
         target: "~/"
         rm: false
 
+    # 앱 포트로 실행된 jar 파일 종료
     - name: Stop existing Spring Boot application
       uses: appleboy/ssh-action@master
       with:
@@ -51,17 +59,3 @@ jobs:
         script: |
           echo "Stopping existing application..."
           pid=$(lsof -t -i:${{ secrets.APP_PORT }}) && kill -9 $pid || echo "No application running on port ${{ secrets.APP_PORT }}"
-
-
-    - name: execute shell script
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.SSH_IP }}
-        username: ${{ secrets.SSH_ID }}
-        key: ${{ secrets.SSH_KEY }}
-        port: ${{ secrets.SSH_PORT }}
-        script_stop: true
-        script: |
-          echo "Starting new application..."
-          nohup java -jar ~/target/hello.jar --server.port=${{ secrets.APP_PORT }} > app.log 2>&1 &
-          echo "New application started. Check app.log for details."
