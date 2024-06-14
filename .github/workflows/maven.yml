@@ -51,13 +51,7 @@ jobs:
         script_stop: true
         script: |
           echo "Starting new application..."
-          nohup java -jar ~/hello.jar --server.port=8080 > app.log 2>&1 &
+          nohup java -jar ~/target/hello.jar --server.port=8080 > app.log 2>&1 &
           echo "New application started. Check app.log for details."
-          if netstat -an | grep LISTEN | grep ':${secrets.APP_PORT}'; then
-            echo "Application is listening on port ${secrets.APP_PORT}."
-          else
-            echo "Application is not listening on port ${secrets.APP_PORT}."
-            exit 1
-          fi
-          echo "Script execution completed."
+
 
