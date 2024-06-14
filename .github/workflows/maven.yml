@@ -79,3 +79,4 @@ jobs:
           nohup java -jar ~/target/hello.jar --server.port=${{ secrets.APP_PORT }} > app.log 2>&1 &
           echo "New application started. Check app.log for details."
 
+
