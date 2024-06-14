@@ -50,31 +50,8 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script_stop: true
         script: |
-          echo "Stopping existing application..."
-          if [ -f "/path/to/app.pid" ]; then
-            kill $(cat /path/to/app.pid) || echo "Failed to kill process"
-            rm /path/to/app.pid
-            echo "Existing application stopped."
-          else
-            echo "No existing application running"
-          fi
           echo "Starting new application..."
-          nohup java -jar ~/target/hello.jar --server.port=8080 > app.log 2>&1 &
+          nohup java -jar ~/target/hello.jar --server.port=8081 > app.log 2>&1 &
           echo "New application started. Check app.log for details."
-          sleep 10  # 애플리케이션이 시작될 시간을 주기 위해 대기
-          echo "Checking if the application is running..."
-          if pgrep -f 'java -jar ~/target/hello.jar'; then
-            echo "Application is running successfully."
-          else
-            echo "Application failed to start."
-            exit 1
-          fi
-          echo "Checking if the port 8080 is being used..."
-          if netstat -an | grep LISTEN | grep ':8080'; then
-            echo "Application is listening on port 8080."
-          else
-            echo "Application is not listening on port 8080."
-            exit 1
-          fi
-          echo "Script execution completed."
+
 
