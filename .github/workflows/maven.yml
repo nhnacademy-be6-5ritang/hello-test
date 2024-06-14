@@ -53,3 +53,17 @@ jobs:
         script: |
           echo "Stopping existing application..."
           pid=$(lsof -t -i:${{ secrets.APP_PORT }}) && kill -9 $pid || echo "No application running on port ${{ secrets.APP_PORT }}"
+
+    #앱 포트로 배포 한 jar 파일 실행
+    - name: execute shell script
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_IP }}
+        username: ${{ secrets.SSH_ID }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script_stop: true
+        script: |
+          echo "Starting new application..."
+          nohup java -jar ~/target/hello.jar --server.port=${{ secrets.APP_PORT }} > app.log 2>&1 &
+          echo "New application started. Check app.log for details."
