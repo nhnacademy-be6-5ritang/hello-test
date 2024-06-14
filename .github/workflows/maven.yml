@@ -30,6 +30,12 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
+    # 소나큐브 테스트 커버리지 측정
+    - name: Build and analyze with SonarQube
+      env:
+        SONAR_PROJECT_KEY: "5RITANG_TEST_COVERAGE"
+      run: mvn sonar:sonar -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }} -Dsonar.host.url=${{secrets.SONAR_HOST}} -Dsonar.login=${{secrets.SONAR_TOKEN}}
+
     # jar 파일 배포
     - name: upload file
       uses: appleboy/scp-action@v0.1.7
