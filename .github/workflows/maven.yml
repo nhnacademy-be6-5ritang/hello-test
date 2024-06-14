@@ -40,6 +40,10 @@ jobs:
         source: "target/*.jar"
         target: "~/"
         rm: false
+    - name: Wait and then kill Spring Boot Application
+      run: |
+          sleep 10
+          pkill -f 'java -jar ~/target/hello.jar'
 
     - name: execute shell script
       uses: appleboy/ssh-action@master
@@ -51,5 +55,5 @@ jobs:
         script_stop: true
         script: |
           echo "Starting new application..."
-          nohup java -jar ~/target/hello.jar --server.port=8081 > app.log 2>&1 &
+          nohup java -jar ~/target/hello.jar --server.port=8080 > app.log 2>&1 &
           echo "New application started. Check app.log for details."
