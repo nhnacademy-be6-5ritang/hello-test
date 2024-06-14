@@ -53,6 +53,3 @@ jobs:
           echo "Starting new application..."
           nohup java -jar ~/target/hello.jar --server.port=8081 > app.log 2>&1 &
           echo "New application started. Check app.log for details."
-
-
-
