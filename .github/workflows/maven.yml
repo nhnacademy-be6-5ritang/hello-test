@@ -40,6 +40,21 @@ jobs:
         source: "target/*.jar"
         target: "~/"
         rm: false
+    - name: Wait and then kill Spring Boot Application
+      run: |
+          pkill -f 'java -jar ~/target/hello.jar'
+
+    - name: Stop existing Spring Boot application
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_IP }}
+        username: ${{ secrets.SSH_ID }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          echo "Stopping existing application..."
+          pkill -f 'java -jar ~/hello.jar' || echo "No existing application running"
+
 
     - name: execute shell script
       uses: appleboy/ssh-action@master
@@ -50,8 +65,6 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script_stop: true
         script: |
-          echo "Stopping existing application..."
-          pkill -f 'java -jar ~/target/hello.jar' || echo "No existing application running"
           echo "Starting new application..."
           nohup java -jar ~/target/hello.jar --server.port=8080 > app.log 2>&1 &
           echo "New application started. Check app.log for details."
