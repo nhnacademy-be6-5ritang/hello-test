@@ -54,6 +54,13 @@ jobs:
           pkill -f 'java -jar hello.jar' || echo "No existing application running"
           echo "Existing application stopped."
           echo "Starting new application..."
-          nohup java -jar ~/hello.jar --server.port=8080 > app.log 2>&1 &
+          nohup java -jar ~/hello.jar --server.port=${{ secrets.APP_PORT }} > app.log 2>&1 &
           echo "New application started. Check app.log for details."
-
+          sleep 10  # 애플리케이션이 시작될 시간을 주기 위해 대기
+          echo "Checking if the application is running..."
+          if pgrep -f 'java -jar hello.jar'; then
+            echo "Application is running successfully."
+          else
+            echo "Application failed to start."
+            exit 1
+          fi
