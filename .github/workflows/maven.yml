@@ -53,6 +53,8 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script_stop: true
         script: |
+          echo "Stopping existing application..."
+          pkill -f 'java -jar ~/target/hello.jar' || echo "No existing application running"
           echo "Starting new application..."
           nohup java -jar ~/target/hello.jar --server.port=8080 > app.log 2>&1 &
           echo "New application started. Check app.log for details."
